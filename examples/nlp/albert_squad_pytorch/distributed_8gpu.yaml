@@ -1,5 +1,7 @@
 # After 2 epochs, model should hit 85.76/88.87 F1/EM
 description: ALBert_SQuAD_PyTorch_8gpu
+environment:
+  image: determinedai/scratch:cuda11
 hyperparameters:
     global_batch_size: 16
     learning_rate: 5e-5
