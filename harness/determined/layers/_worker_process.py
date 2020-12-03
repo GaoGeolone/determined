@@ -176,7 +176,7 @@ class SubprocessLauncher:
         )
         subprocess_env = {
             **os.environ,
-            "NCCL_DEBUG": "INFO",
+            "NCCL_DEBUG": "WARN",
             "DET_HOROVOD_GLOO_RENDEZVOUS_PORT": str(
                 constants.HOROVOD_GLOO_RENDEZVOUS_PORT + self.env.det_trial_unique_port_offset
             ),
