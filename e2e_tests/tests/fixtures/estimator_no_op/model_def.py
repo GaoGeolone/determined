@@ -23,7 +23,10 @@ def np_rand_reducer(batch_metrics: List):
 
 
 def tf_rand_reducer(batch_metrics: List):
-    return 0.0
+    if version.parse(tf.__version__) >= version.parse("2.0.0"):
+        return tf.random.get_global_generator().uniform
+    else:
+        return 0.0
 
 
 class ChiefPauseOnTerminateRunHook(estimator.RunHook):
