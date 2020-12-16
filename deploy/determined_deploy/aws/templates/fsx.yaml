@@ -139,6 +139,16 @@ Parameters:
     Type: String
     Description: Whether preemption is enabled (only supported for priority scheduler).
     Default: false
+  
+  CpuImage:
+    Type: String
+    Description: Docker image for CPU tasks
+    Default: ""
+
+  GpuImage:
+    Type: String
+    Description: Docker image for GPU tasks
+    Default: ""
 
 Resources:
   VPC:
@@ -720,6 +730,23 @@ Resources:
                 cert: /etc/determined/master.crt
                 key: /etc/determined/master.key
             EOF
+            fi
+
+            if [ -n "${CpuImage}" ] || [ -n "${GpuImage}" ]; then
+              cat << EOF >> /usr/local/determined/etc/master.yaml
+            task_container_defaults:
+              image:
+            EOF
+              if [ -n "${CpuImage}" ]; then
+                cat << EOF >> /usr/local/determined/etc/master.yaml
+                cpu: ${CpuImage}
+            EOF
+              fi
+              if [ -n "${GpuImage}" ]; then
+                cat << EOF >> /usr/local/determined/etc/master.yaml
+                gpu: ${GpuImage}
+            EOF
+              fi
             fi
 
             apt-get remove docker docker-engine docker.io containerd runc

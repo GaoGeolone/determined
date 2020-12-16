@@ -117,3 +117,9 @@ variable "scheduler_type" {
 
 variable "preemption_enabled" {
 }
+
+variable "cpu_image" {
+}
+
+variable "gpu_image" {
+}

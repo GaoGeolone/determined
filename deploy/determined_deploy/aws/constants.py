@@ -49,6 +49,8 @@ class cloudformation:
     SPOT_MAX_PRICE = "SpotMaxPrice"
     SCHEDULER_TYPE = "SchedulerType"
     PREEMPTION_ENABLED = "PreemptionEnabled"
+    CPU_IMAGE = "CpuImage"
+    GPU_IMAGE = "GpuImage"
 
 
 class misc:

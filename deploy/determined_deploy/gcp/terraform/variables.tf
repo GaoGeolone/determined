@@ -128,7 +128,7 @@ variable "min_cpu_platform_agent" {
 variable "scheduler_type" {
   type = string
   default = "fair_share"
-}
+  }
 
 variable "preemption_enabled" {
   type = bool
@@ -147,6 +147,16 @@ variable "det_version" {
 
 variable "det_version_key" {
   type = string
+}
+
+variable "cpu_image" {
+  type = string
+  default = ""
+}
+
+variable "gpu_image" {
+  type = string
+  default = ""
 }
 
 // MASTER
@@ -188,3 +198,4 @@ variable "db_ssl_enabled" {
   type = bool
   default = true
 }
+

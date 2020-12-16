@@ -34,6 +34,10 @@ class Simple(base.DeterminedDeployment):
         constants.cloudformation.SUBNET_ID_KEY,
         constants.cloudformation.SCHEDULER_TYPE,
         constants.cloudformation.PREEMPTION_ENABLED,
+        constants.cloudformation.CPU_IMAGE,
+        constants.cloudformation.GPU_IMAGE,
+        constants.cloudformation.CPU_IMAGE,
+        constants.cloudformation.GPU_IMAGE,
     ]
 
     def deploy(self) -> None:

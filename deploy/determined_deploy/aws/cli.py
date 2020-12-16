@@ -167,6 +167,16 @@ def make_up_subparser(subparsers: argparse._SubParsersAction) -> None:
         action="store_true",
         help="print deployment template",
     )
+    subparser.add_argument(
+        "--cpu-image",
+        type=str,
+        help="Docker image for CPU tasks",
+    )
+    subparser.add_argument(
+        "--gpu-image",
+        type=str,
+        help="Docker image for GPU tasks",
+    )
 
 
 def make_aws_parser(subparsers: argparse._SubParsersAction) -> None:
@@ -214,6 +224,10 @@ def deploy_aws(args: argparse.Namespace) -> None:
 
         print("Delete Successful")
         return
+    
+    if (args.cpu_image and not args.gpu_image) or (args.gpu_image and not args.cpu_image):
+        print("If a CPU or GPU image is specified, both should be.")
+        sys.exit(1)
 
     deployment_type_map = {
         constants.deployment_types.SIMPLE: simple.Simple,
@@ -261,6 +275,8 @@ def deploy_aws(args: argparse.Namespace) -> None:
         constants.cloudformation.SUBNET_ID_KEY: args.agent_subnet_id,
         constants.cloudformation.SCHEDULER_TYPE: args.scheduler_type,
         constants.cloudformation.PREEMPTION_ENABLED: args.preemption_enabled,
+        constants.cloudformation.CPU_IMAGE: args.cpu_image,
+        constants.cloudformation.GPU_IMAGE: args.gpu_image,
     }
 
     deployment_object = deployment_type_map[args.deployment_type](det_configs)
