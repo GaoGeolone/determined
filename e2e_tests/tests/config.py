@@ -17,6 +17,14 @@ TF2_CPU_IMAGE = "determinedai/environments:py-3.6.9-pytorch-1.4-tf-2.2-cpu-0f200
 TF1_GPU_IMAGE = "determinedai/environments:cuda-10.0-pytorch-1.4-tf-1.15-gpu-0f2001a"
 TF2_GPU_IMAGE = "determinedai/environments:cuda-10.1-pytorch-1.4-tf-2.2-gpu-0f2001a"
 
+if os.environ.get('TF1_CPU_IMAGE') is not None:
+  TF1_CPU_IMAGE = os.environ.get('TF1_CPU_IMAGE')
+if os.environ.get('TF2_CPU_IMAGE') is not None:
+  TF2_CPU_IMAGE = os.environ.get('TF2_CPU_IMAGE')
+if os.environ.get('TF1_GPU_IMAGE') is not None:
+  TF1_GPU_IMAGE = os.environ.get('TF1_GPU_IMAGE')
+if os.environ.get('TF2_GPU_IMAGE') is not None:
+  TF2_GPU_IMAGE = os.environ.get('TF2_GPU_IMAGE')
 
 def fixtures_path(path: str) -> str:
     return os.path.join(os.path.dirname(__file__), "fixtures", path)
