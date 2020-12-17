@@ -1674,6 +1674,11 @@ jobs:
     docker:
       - image: determinedai/cimg-base:stable
     parallelism: <<parameters.parallelism>>
+    environment:
+      TF1_CPU_IMAGE: determinedai/scratch:cuda11
+      TF2_CPU_IMAGE: determinedai/scratch:cuda11
+      TF1_GPU_IMAGE: determinedai/scratch:cuda11
+      TF2_GPU_IMAGE: determinedai/scratch:cuda11
     steps:
       - checkout
       - set-slack-user-id
@@ -1697,11 +1702,6 @@ jobs:
       - run-e2e-tests:
           mark: <<parameters.mark>>
           master-host: ${MASTER_HOST}
-          environment:
-            TF1_CPU_IMAGE: determinedai/scratch:cuda11
-            TF2_CPU_IMAGE: determinedai/scratch:cuda11
-            TF1_GPU_IMAGE: determinedai/scratch:cuda11
-            TF2_GPU_IMAGE: determinedai/scratch:cuda11
       - terminate-gke-cluster:
           cluster-id: ${CLUSTER_ID}
           region: <<parameters.region>>
