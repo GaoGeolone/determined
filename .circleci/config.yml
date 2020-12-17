@@ -505,6 +505,8 @@ commands:
               --cluster-id <<parameters.cluster-id>> \
               --project-id determined-ai \
               --det-version <<parameters.det-version>> \
+              --cpu-image determinedai/scratch:cuda11 \
+              --gpu-image determinedai/scratch:cuda11 \
               --agent-instance-type <<parameters.agent-instance-type>> \
               --max-dynamic-agents <<parameters.max-dynamic-agents>> # TODO replace keypair with something?
   terminate-gcp-cluster:
@@ -727,6 +729,8 @@ commands:
           values-to-override: |
             detVersion=<<parameters.det-version>>,\
             maxSlotsPerPod=<<parameters.gpus-per-machine>>,\
+            taskContainerDefaults.cpuImage=determinedai/scratch:cuda11,\
+            taskContainerDefaults.gpuImage=determinedai/scratch:cuda11,\
             checkpointStorage.type=gcs,\
             checkpointStorage.bucket=det-ci
       - set-master-address-gke:
@@ -1512,6 +1516,11 @@ jobs:
         default: ""
     docker:
       - image: determinedai/cimg-base:stable
+    environment:
+      TF1_CPU_IMAGE: determinedai/scratch:cuda11
+      TF2_CPU_IMAGE: determinedai/scratch:cuda11
+      TF1_GPU_IMAGE: determinedai/scratch:cuda11
+      TF2_GPU_IMAGE: determinedai/scratch:cuda11
     parallelism: <<parameters.parallelism>>
     steps:
       - checkout
@@ -1688,6 +1697,11 @@ jobs:
       - run-e2e-tests:
           mark: <<parameters.mark>>
           master-host: ${MASTER_HOST}
+          environment:
+            TF1_CPU_IMAGE: determinedai/scratch:cuda11
+            TF2_CPU_IMAGE: determinedai/scratch:cuda11
+            TF1_GPU_IMAGE: determinedai/scratch:cuda11
+            TF2_GPU_IMAGE: determinedai/scratch:cuda11
       - terminate-gke-cluster:
           cluster-id: ${CLUSTER_ID}
           region: <<parameters.region>>
