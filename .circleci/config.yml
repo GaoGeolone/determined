@@ -1713,7 +1713,7 @@ jobs:
       - run-e2e-tests:
           mark: <<parameters.mark>>
           master-host: ${MASTER_HOST}
-      - terminate-gke-cluster-a100
+      - terminate-gke-cluster-a100:
           cluster-id: ${CLUSTER_ID}
           zone: <<parameters.node-locations>>
       - slack/status:
