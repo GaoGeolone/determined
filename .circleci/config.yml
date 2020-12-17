@@ -464,7 +464,6 @@ commands:
           - run:
               name: Enable CORS
               command: 'echo --enable-cors >> /tmp/det-deploy-extra-args'
-
       - run:
           name: Configure TLS arguments
           command: |
@@ -479,6 +478,12 @@ commands:
             #  echo '    gpu: determinedai/scratch:cuda11' >> /tmp/master-config-file
             #  echo "--master-config-path /tmp/master-config-file" >> /tmp/det-deploy-extra-args
             #fi
+      - gcloud/install:
+          version: "319.0.0"
+      - gcloud/initialize:
+          gcloud-service-key: <<parameters.gcloud-service-key>>
+          google-compute-zone: <<parameters.google-compute-zone>>
+          google-project-id: <<parameters.google-project-id>>
       - run:
           name: Install HashiCorp GPG key
           command: curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -488,12 +493,6 @@ commands:
       - run:
           name: Install Terraform
           command: sudo apt-get update && sudo apt-get install terraform
-      - gcloud/install:
-          version: "319.0.0"
-      - gcloud/initialize:
-          gcloud-service-key: <<parameters.gcloud-service-key>>
-          google-compute-zone: <<parameters.google-compute-zone>>
-          google-project-id: <<parameters.google-project-id>>
       - run:
           name: Deploy GCP cluster
           command: |
@@ -607,6 +606,20 @@ commands:
           command: |
             gcloud container clusters delete <<parameters.cluster-id>> --quiet --region=<<parameters.region>>
 
+  terminate-gke-cluster-a100:
+    parameters:
+      cluster-id:
+        type: string
+      zone:
+        type: string
+    steps:
+      # Use a run instead of `gke/delete-cluster` because circle CI orbs do not support `when`.
+      - run:
+          name: Terminate GKE Cluster
+          when: always
+          command: |
+            gcloud container clusters delete <<parameters.cluster-id>> --quiet --zone=<<parameters.zone>>
+
   setup-gke-cluster:
     parameters:
       cluster-id:
@@ -676,8 +689,6 @@ commands:
         type: string
       gpus-per-machine:
         type: integer
-      region:
-        type: string
       node-locations:
         type: string
       release-channel:
@@ -1702,9 +1713,9 @@ jobs:
       - run-e2e-tests:
           mark: <<parameters.mark>>
           master-host: ${MASTER_HOST}
-      - terminate-gke-cluster:
+      - terminate-gke-cluster-a100
           cluster-id: ${CLUSTER_ID}
-          region: <<parameters.region>>
+          zone: <<parameters.node-locations>>
       - slack/status:
           fail_only: True
           only_for_branches: master
